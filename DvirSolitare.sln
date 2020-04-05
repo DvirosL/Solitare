@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvirSolitare", "DvirSolitare\DvirSolitare.csproj", "{760FF1FE-A3C2-4D70-84C3-58376E2F725F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{760FF1FE-A3C2-4D70-84C3-58376E2F725F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{760FF1FE-A3C2-4D70-84C3-58376E2F725F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{760FF1FE-A3C2-4D70-84C3-58376E2F725F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{760FF1FE-A3C2-4D70-84C3-58376E2F725F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B86D4DD3-0027-46BA-B361-D4A79EBDCF0D}
+	EndGlobalSection
+EndGlobal

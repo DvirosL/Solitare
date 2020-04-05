@@ -1,0 +1,12 @@
+D:\Code\Grade 10th\cardsgame\DvirSolitare\bin\Debug\netcoreapp2.1\DvirSolitare.deps.json
+D:\Code\Grade 10th\cardsgame\DvirSolitare\bin\Debug\netcoreapp2.1\DvirSolitare.runtimeconfig.json
+D:\Code\Grade 10th\cardsgame\DvirSolitare\bin\Debug\netcoreapp2.1\DvirSolitare.runtimeconfig.dev.json
+D:\Code\Grade 10th\cardsgame\DvirSolitare\bin\Debug\netcoreapp2.1\DvirSolitare.dll
+D:\Code\Grade 10th\cardsgame\DvirSolitare\bin\Debug\netcoreapp2.1\DvirSolitare.pdb
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.csprojAssemblyReference.cache
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.csproj.CoreCompileInputs.cache
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.AssemblyInfoInputs.cache
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.AssemblyInfo.cs
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.dll
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.pdb
+D:\Code\Grade 10th\cardsgame\DvirSolitare\obj\Debug\netcoreapp2.1\DvirSolitare.genruntimeconfig.cache
