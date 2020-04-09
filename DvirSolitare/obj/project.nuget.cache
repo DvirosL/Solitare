@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4IPcZO/h3OlNmyhIMJRAz4ztCDZ+STotex9us0YGDimanrzII6CZwxtIVMoe7ojhsjPXnB5KOKeKJJrp7oDD6g==",
+  "dgSpecHash": "1ofhboO2/5TwZ/GmzE8dSSjIq9pKPctbBCIjzHm2PnogwbhNbsa7ptlP7UFFSeEC/JJJSKvims2C+6isRPOFNA==",
   "success": true,
-  "projectFilePath": "D:\\Code\\Grade 10th\\cardsgame\\DvirSolitare\\DvirSolitare.csproj",
+  "projectFilePath": "D:\\Code\\Grade 10th\\cardsgame\\Solitare\\DvirSolitare\\DvirSolitare.csproj",
   "expectedPackageFiles": [
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.app\\2.1.0\\microsoft.netcore.app.2.1.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.dotnetapphost\\2.1.0\\microsoft.netcore.dotnetapphost.2.1.0.nupkg.sha512",

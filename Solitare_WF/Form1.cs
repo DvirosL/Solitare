@@ -21,6 +21,7 @@ namespace Solitare_WF
         private List<PictureBox>[] lines = new List<PictureBox>[7];
         private bool win;
         private PictureBox[] hidCards = new PictureBox[27];
+        private Image hiddenCardImg = Image.FromFile("..\\..\\..\\PNG\\yellow_back.png");
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace Solitare_WF
         }
         public void Deck()
         {
+            hiddenCardImg = Resize(hiddenCardImg, 86, 132);
             //Shuffle
             Random rnd = new Random();
             for (int i = 0; i < 51; i++)
@@ -56,15 +58,13 @@ namespace Solitare_WF
                 cards[i].Size = img.Size;
                 cards[i].Image = img;
                 cards[i].Tag = deck.getCard(i);
-
-                if(i > 27)
+//              cards[i].Click += selected(i);
+                if (i > 27)
                 {
                     dealer[i-28] = new PictureBox();
                     dealer[i-28].Location = new Point(100, 50);
-                    Image img1 = Image.FromFile("..\\..\\..\\PNG\\yellow_back.png");
-                    img1 = Resize(img1, 86, 132);
-                    dealer[i-28].Size = img1.Size;
-                    dealer[i-28].Image = img1;
+                    dealer[i-28].Size = hiddenCardImg.Size;
+                    dealer[i-28].Image = hiddenCardImg;
                     dealer[i-28].Tag = cards[i];
                     dealer[i-28].Click += Dealer_Click;
                     Controls.Add(dealer[i-28]);
@@ -183,21 +183,9 @@ namespace Solitare_WF
         {
 
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
 
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            PictureBox pictureBox = (PictureBox)sender;
-            if(isSelected)
-            {
-                pictureBox.Location = selected.Location;
-            }
-            selected = pictureBox;
-            isSelected = !isSelected;
         }
         public void slotim()
         {
@@ -212,16 +200,6 @@ namespace Solitare_WF
                 Controls.Add(slots[i]);
             }
         }
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            PictureBox pictureBox = (PictureBox)sender;
-            if (isSelected)
-            {
-                pictureBox.Location = selected.Location;
-            }
-            selected = pictureBox;
-            isSelected = !isSelected;
-        }
         public Image Resize(Image image, int w, int h)
         {
             Bitmap bmp = new Bitmap(w, h);
@@ -231,10 +209,14 @@ namespace Solitare_WF
 
             return bmp;
         }
-
+        //public void selected()
+        //{
+            
+        //}
         private void Dealer_Click(object sender, EventArgs e)
         {
-            PictureBox openDealer = (PictureBox)sender;       PictureBox openCard = (PictureBox)openDealer.Tag;
+            PictureBox openDealer = (PictureBox)sender;       
+            PictureBox openCard = (PictureBox)openDealer.Tag;
             openCard.Location = new Point(200, 50);
             Controls.Add(openCard);
             Controls.Remove(openDealer);
@@ -255,91 +237,26 @@ namespace Solitare_WF
                 Controls.Remove((PictureBox)dealer[23].Tag);
             }
         }
+        //private void pictureBox_Click(object sender, EventArgs e)
+        //{
+        //    PictureBox pictureBox = (PictureBox)sender;
+        //    if(isSelected)
+        //    {
+        //        pictureBox.Location = selected.Location;
+        //    }
+        //    selected = pictureBox;
+        //    isSelected = !isSelected;
+        //}
+        //
+        //private void pictureBox2_Click(object sender, EventArgs e)
+        //{
+        //    PictureBox pictureBox = (PictureBox)sender;
+        //    if (isSelected)
+        //    {
+        //        pictureBox.Location = selected.Location;
+        //    }
+        //    selected = pictureBox;
+        //    isSelected = !isSelected;
+        //}
     }
 }
-//if (i == 0)
-//                    {
-                        
-//                        lines[0].Add(cards[0]);
-//lines[0][0].Location = new Point(100, 450);
-//Controls.Add(lines[0][0]);
-//                    }
-//                    if (i == 1 || i == 2)
-//                    {
-//                        if(i == 2)
-//                        {
-//                            lines[1].Add(dealer[i]);
-//                        }
-//                        else
-//                        {
-//                            lines[1].Add(cards[i]);
-//                        }
-//                        lines[1][i - 1].Location = new Point(200, 450 + (i - 1) * 20);
-//                        Controls.Add(lines[1][i - 1]);
-//                    }
-//                    if (i >= 3 && i <= 5)
-//                    {
-//                        if(i != 5)
-//                        {
-//                            lines[2].Add(dealer[i]);
-//                        }
-//                        else
-//                        {
-//                            lines[2].Add(cards[i]);
-//                        }
-//                        lines[2][i - 3].Location = new Point(300, 450 + (i - 3) * 20);
-//                        Controls.Add(lines[2][i - 3]);
-//                    }
-//                    if (i >= 6 && i <= 9)
-//                    {
-//                        if(i != 9)
-//                        {
-//                            lines[3].Add(dealer[i]);
-//                        }
-//                        else
-//                        {
-//                            lines[3].Add(cards[i]);
-//                        }
-//                        lines[3][i - 6].Location = new Point(400, 450 + (i - 6) * 20);
-//                        Controls.Add(lines[3][i - 6]);
-//                    }
-//                    if (i >= 10 && i <= 14)
-//                    {
-//                        if(i!=14)
-//                        {
-//                            lines[4].Add(dealer[i]);
-//                        }
-//                        else
-//                        {
-//                            lines[4].Add(cards[i]);
-//                        }
-//                        lines[4][i - 10].Location = new Point(500, 450 + (i - 10) * 20);
-//                        Controls.Add(lines[4][i - 10]);
-//                    }
-//                    if (i >= 15 && i <= 20)
-//                    {
-//                        if (i != 20)
-//                        {
-//                            lines[5].Add(dealer[i]);
-//                        }
-//                        else
-//                        {
-//                            lines[5].Add(cards[i]);
-//                        }
-//                        lines[5][i - 15].Location = new Point(600, 450 + (i - 15) * 20);
-//                        Controls.Add(lines[5][i - 15]);
-//                    }
-//                    if (i >= 21 && i <= 27)
-//                    {
-//                        if (i != 27)
-//                        {
-//                            lines[6].Add(dealer[i]);
-//                        }
-//                        else
-//                        {
-//                            lines[6].Add(cards[i]);
-//                        }
-//                        lines[6][i - 21].Location = new Point(700, 450 + (i-21)*20);
-//                        Controls.Add(lines[6][i - 21]);
-
-//                    }

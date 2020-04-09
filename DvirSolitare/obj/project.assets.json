@@ -694,11 +694,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\Grade 10th\\cardsgame\\DvirSolitare\\DvirSolitare.csproj",
+      "projectUniqueName": "D:\\Code\\Grade 10th\\cardsgame\\Solitare\\DvirSolitare\\DvirSolitare.csproj",
       "projectName": "DvirSolitare",
-      "projectPath": "D:\\Code\\Grade 10th\\cardsgame\\DvirSolitare\\DvirSolitare.csproj",
+      "projectPath": "D:\\Code\\Grade 10th\\cardsgame\\Solitare\\DvirSolitare\\DvirSolitare.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\Grade 10th\\cardsgame\\DvirSolitare\\obj\\",
+      "outputPath": "D:\\Code\\Grade 10th\\cardsgame\\Solitare\\DvirSolitare\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -8,3 +8,13 @@ D:\Code\Grade 10th\cardsgame\Solitare_WF\obj\Debug\Solitare_WF.csproj.GenerateRe
 D:\Code\Grade 10th\cardsgame\Solitare_WF\obj\Debug\Solitare_WF.csproj.CoreCompileInputs.cache
 D:\Code\Grade 10th\cardsgame\Solitare_WF\obj\Debug\Solitare_WF.exe
 D:\Code\Grade 10th\cardsgame\Solitare_WF\obj\Debug\Solitare_WF.pdb
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\bin\Debug\Solitare_WF.exe.config
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\bin\Debug\Solitare_WF.exe
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\bin\Debug\Solitare_WF.pdb
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.csprojAssemblyReference.cache
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.Form1.resources
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.Properties.Resources.resources
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.csproj.GenerateResource.cache
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.csproj.CoreCompileInputs.cache
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.exe
+D:\Code\Grade 10th\cardsgame\Solitare\Solitare_WF\obj\Debug\Solitare_WF.pdb
