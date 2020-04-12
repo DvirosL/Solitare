@@ -67,6 +67,10 @@ namespace Solitare_WF
             {
                 return true;
             }
+            else if ((c2.getType() == "Spade" || c2.getType() == "Club") && (c1.getType() == "Heart" || c1.getType() == "Diamond"))
+            {
+                return true;
+            }
             return false;
         }
     }

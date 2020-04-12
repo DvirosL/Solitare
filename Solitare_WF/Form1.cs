@@ -12,7 +12,6 @@ namespace Solitare_WF
 {
     public partial class Form1 : Form
     {
-        private PictureBox selected;
         private bool isSelected = false;
         private PictureBox[] slots = new PictureBox[4];
         private Deck deck = new Deck();
@@ -22,6 +21,10 @@ namespace Solitare_WF
         private bool win;
         private PictureBox[] hidCards = new PictureBox[27];
         private Image hiddenCardImg = Image.FromFile("..\\..\\..\\PNG\\yellow_back.png");
+        private Image glowImg = Image.FromFile("..\\..\\..\\PNG\\glow.png");
+        private PictureBox glowingC = new PictureBox();
+        private PictureBox glowPB = new PictureBox();
+        private int linesNum;
         public Form1()
         {
             InitializeComponent();
@@ -35,7 +38,6 @@ namespace Solitare_WF
         public void Deck()
         {
             hiddenCardImg = Resize(hiddenCardImg, 86, 132);
-            //Shuffle
             Random rnd = new Random();
             for (int i = 0; i < 51; i++)
             {
@@ -44,8 +46,7 @@ namespace Solitare_WF
                 deck.setCard(deck.getCard(tempNum), i);
                 deck.setCard(tempC, tempNum);
                 //MessageBox.Show(deck.getCard(i).ToString());
-            }
-            //End of Shuffle
+            } //Shuffle
             for (int i = 0; i <7; i++)
             {
                 lines[i] = new List<PictureBox>();
@@ -58,11 +59,11 @@ namespace Solitare_WF
                 cards[i].Size = img.Size;
                 cards[i].Image = img;
                 cards[i].Tag = deck.getCard(i);
-//              cards[i].Click += selected(i);
+                cards[i].Click += cardClick;
                 if (i > 27)
                 {
                     dealer[i-28] = new PictureBox();
-                    dealer[i-28].Location = new Point(100, 50);
+                    dealer[i-28].Location = new Point(470, 50);
                     dealer[i-28].Size = hiddenCardImg.Size;
                     dealer[i-28].Image = hiddenCardImg;
                     dealer[i-28].Tag = cards[i];
@@ -88,7 +89,7 @@ namespace Solitare_WF
                 {
 
                     lines[0].Add(cards[0]);
-                    lines[0][0].Location = new Point(100, 450);
+                    lines[0][0].Location = new Point(470, 300);
 //                    Controls.Add(lines[0][0]);
                 }
                 if (i == 1 || i == 2)
@@ -101,7 +102,7 @@ namespace Solitare_WF
                     {
                         lines[1].Add(cards[i]);
                     }
-                    lines[1][i - 1].Location = new Point(200, 450 + (i - 1) * 20);
+                    lines[1][i - 1].Location = new Point(600, 300 + (i - 1) * 20);
 //                    Controls.Add(lines[1][i - 1]);
                 }
                 if (i >= 3 && i <= 5)
@@ -114,7 +115,7 @@ namespace Solitare_WF
                     {
                         lines[2].Add(cards[i]);
                     }
-                    lines[2][i - 3].Location = new Point(300, 450 + (i - 3) * 20);
+                    lines[2][i - 3].Location = new Point(730, 300 + (i - 3) * 20);
 //                    Controls.Add(lines[2][i - 3]);
                 }
                 if (i >= 6 && i <= 9)
@@ -127,7 +128,7 @@ namespace Solitare_WF
                     {
                         lines[3].Add(cards[i]);
                     }
-                    lines[3][i - 6].Location = new Point(400, 450 + (i - 6) * 20);
+                    lines[3][i - 6].Location = new Point(860, 300 + (i - 6) * 20);
 //                    Controls.Add(lines[3][i - 6]);
                 }
                 if (i >= 10 && i <= 14)
@@ -140,7 +141,7 @@ namespace Solitare_WF
                     {
                         lines[4].Add(cards[i]);
                     }
-                    lines[4][i - 10].Location = new Point(500, 450 + (i - 10) * 20);
+                    lines[4][i - 10].Location = new Point(990, 300 + (i - 10) * 20);
 //                    Controls.Add(lines[4][i - 10]);
                 }
                 if (i >= 15 && i <= 20)
@@ -153,7 +154,7 @@ namespace Solitare_WF
                     {
                         lines[5].Add(cards[i]);
                     }
-                    lines[5][i - 15].Location = new Point(600, 450 + (i - 15) * 20);
+                    lines[5][i - 15].Location = new Point(1120, 300 + (i - 15) * 20);
 //                    Controls.Add(lines[5][i - 15]);
                 }
                 if (i >= 21 && i <= 27)
@@ -166,7 +167,7 @@ namespace Solitare_WF
                     {
                         lines[6].Add(cards[i]);
                     }
-                    lines[6][i - 21].Location = new Point(700, 450 + (i - 21) * 20);
+                    lines[6][i - 21].Location = new Point(1250, 300 + (i - 21) * 20);
 //                    Controls.Add(lines[6][i - 21]);
 
                 }
@@ -192,7 +193,7 @@ namespace Solitare_WF
             for(int i = 0; i < 4; i++)
             {
                 slots[i] = new PictureBox();
-                slots[i].Location = new Point(394 + 150*i, 52);
+                slots[i].Location = new Point(860 + 130*i, 52);
                 Image img = Image.FromFile("..\\..\\..\\PNG\\Nword.jpg");
                 img = Resize(img, 86, 132);
                 slots[i].Size = img.Size;
@@ -209,15 +210,22 @@ namespace Solitare_WF
 
             return bmp;
         }
-        //public void selected()
-        //{
-            
-        //}
         private void Dealer_Click(object sender, EventArgs e)
         {
+            //Remove Glow
+            foreach(Control shem in Controls)
+            {
+                if(shem.Location.X == 595 && shem.Location.Y == 45)
+                {
+                    Controls.Remove(shem);
+                    glowingC = null;
+                    isSelected = false;
+                }
+            }
+            //Dealer Click
             PictureBox openDealer = (PictureBox)sender;       
             PictureBox openCard = (PictureBox)openDealer.Tag;
-            openCard.Location = new Point(200, 50);
+            openCard.Location = new Point(600, 50);
             Controls.Add(openCard);
             Controls.Remove(openDealer);
             if (!dealer[0].Equals(openDealer))
@@ -237,26 +245,59 @@ namespace Solitare_WF
                 Controls.Remove((PictureBox)dealer[23].Tag);
             }
         }
-        //private void pictureBox_Click(object sender, EventArgs e)
-        //{
-        //    PictureBox pictureBox = (PictureBox)sender;
-        //    if(isSelected)
-        //    {
-        //        pictureBox.Location = selected.Location;
-        //    }
-        //    selected = pictureBox;
-        //    isSelected = !isSelected;
-        //}
-        //
-        //private void pictureBox2_Click(object sender, EventArgs e)
-        //{
-        //    PictureBox pictureBox = (PictureBox)sender;
-        //    if (isSelected)
-        //    {
-        //        pictureBox.Location = selected.Location;
-        //    }
-        //    selected = pictureBox;
-        //    isSelected = !isSelected;
-        //}
+        public void cardClick(object sender, EventArgs e)
+        {
+            PictureBox selectedC = (PictureBox)sender;
+//            PictureBox glowPB = new PictureBox();
+//            glowPB.Click += glowClick; 
+
+            if(selectedC.Image != Image.FromFile("..\\..\\..\\PNG\\yellow_back.png"))
+            {
+                if(glowingC == null || glowingC.Tag == null)
+                {
+                    glowImg = Resize(glowImg, 95, 145);
+                    glowPB.Location = new Point(selectedC.Location.X - 5, selectedC.Location.Y - 5);
+                    glowPB.Image = glowImg;
+                    glowPB.Size = glowImg.Size;
+                    Controls.Add(glowPB);
+                    glowingC = selectedC;
+                }
+                else
+                {
+                    if(selectedC == glowingC)
+                    {
+                        Controls.Remove(glowPB);
+                        glowingC = null;
+                    }
+                    else if(deck.areDifferentcolors((Card)selectedC.Tag,(Card)glowingC.Tag) && deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag))
+                    {
+                        Controls.Remove(glowPB);
+                        glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
+                        for(int i = 0; i < 7; i++)
+                        {
+                            if (lines[i].Contains(glowingC))
+                            {
+                                lines[i].Remove(glowingC);
+                            }
+                            else if (lines[i].Contains(selectedC))
+                            {
+                                lines[i].Add(glowingC);
+                            }
+                        }
+                        glowingC = null;
+                    }
+                }
+            }
+            
+        }
+        public void glowClick(object sender, EventArgs e)
+        {
+            PictureBox glowPB = (PictureBox)sender;
+            Controls.Remove(glowPB);
+            isSelected = false;
+            glowingC = null;
+        }
+        //public void pictureBox1_Click(object sender, EventArgs e) { }
+        //public void pictureBox7_Click(object sender, EventArgs e) { }
     }
 }
