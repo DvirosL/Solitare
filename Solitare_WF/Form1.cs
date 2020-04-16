@@ -13,7 +13,7 @@ namespace Solitare_WF
     public partial class Form1 : Form
     {
         private bool isSelected = false;
-        private PictureBox[] slots = new PictureBox[4];
+        private PictureBox[] slotsPB = new PictureBox[4];
         private Deck deck = new Deck();
         private PictureBox[] cards = new PictureBox[52];
         private PictureBox[] dealer = new PictureBox[24];
@@ -24,7 +24,7 @@ namespace Solitare_WF
         private Image glowImg = Image.FromFile("..\\..\\..\\PNG\\glow.png");
         private PictureBox glowingC = new PictureBox();
         private PictureBox glowPB = new PictureBox();
-        private int linesNum;
+        private PictureBox openDealer = new PictureBox();
         public Form1()
         {
             InitializeComponent();
@@ -51,15 +51,26 @@ namespace Solitare_WF
             {
                 lines[i] = new List<PictureBox>();
             }
-            for(int i = 0 ; i < 52 ; i++)
+            for (int i = 0; i < 52; i++)
             {
                 cards[i] = new PictureBox();
-                Image img = Image.FromFile("..\\..\\..\\PNG\\" + deck.getCard(i).getNum().ToString() + deck.getCard(i).getType()[0] + ".png" );
+                Image img = Image.FromFile("..\\..\\..\\PNG\\" + deck.getCard(i).getNum().ToString() + deck.getCard(i).getType()[0] + ".png");
                 img = Resize(img, 86, 132);
                 cards[i].Size = img.Size;
                 cards[i].Image = img;
                 cards[i].Tag = deck.getCard(i);
-                cards[i].Click += cardClick;
+                //if (((Card)cards[i].Tag).getNum() == 1)
+                //{
+                //    cards[i].Click += aceClick; 
+                //}
+                //else if(((Card)cards[i].Tag).getNum() == 13)
+                //{
+                //    cards[i].Click += kingClick;
+                //}
+//                else
+//                {
+                    cards[i].Click += cardClick;
+//                }
                 if (i > 27)
                 {
                     dealer[i-28] = new PictureBox();
@@ -192,13 +203,15 @@ namespace Solitare_WF
         {
             for(int i = 0; i < 4; i++)
             {
-                slots[i] = new PictureBox();
-                slots[i].Location = new Point(860 + 130*i, 52);
-                Image img = Image.FromFile("..\\..\\..\\PNG\\Nword.jpg");
+                slotsPB[i] = new PictureBox();
+                slotsPB[i].Tag = deck.getSlot(i);
+                slotsPB[i].Location = new Point(860 + 130*i, 52);
+                Image img = Image.FromFile($"..\\..\\..\\PNG\\slot{slotsPB[i].Tag}.png");
                 img = Resize(img, 86, 132);
-                slots[i].Size = img.Size;
-                slots[i].Image = img;
-                Controls.Add(slots[i]);
+                slotsPB[i].Size = img.Size;
+                slotsPB[i].Image = img;
+                //slotsPB[i].Click += slotClick;
+                Controls.Add(slotsPB[i]);
             }
         }
         public Image Resize(Image image, int w, int h)
@@ -210,20 +223,23 @@ namespace Solitare_WF
 
             return bmp;
         }
+        public void slotClick(object sender, EventArgs e)
+        {
+
+        }
         private void Dealer_Click(object sender, EventArgs e)
         {
             //Remove Glow
             foreach(Control shem in Controls)
             {
-                if(shem.Location.X == 595 && shem.Location.Y == 45)
+                if(shem.Location.X == 595 && shem.Location.Y == 45 && glowingC != null)
                 {
                     Controls.Remove(shem);
                     glowingC = null;
-                    isSelected = false;
                 }
             }
             //Dealer Click
-            PictureBox openDealer = (PictureBox)sender;       
+            openDealer = (PictureBox)sender;       
             PictureBox openCard = (PictureBox)openDealer.Tag;
             openCard.Location = new Point(600, 50);
             Controls.Add(openCard);
@@ -248,10 +264,11 @@ namespace Solitare_WF
         public void cardClick(object sender, EventArgs e)
         {
             PictureBox selectedC = (PictureBox)sender;
-//            PictureBox glowPB = new PictureBox();
-//            glowPB.Click += glowClick; 
-
-            if(selectedC.Image != Image.FromFile("..\\..\\..\\PNG\\yellow_back.png"))
+            //            PictureBox glowPB = new PictureBox();
+            //            glowPB.Click += glowClick; 
+            Console.WriteLine($"You clicked {(Card)selectedC.Tag}");
+            
+            if(selectedC.Image != Image.FromFile("..\\..\\..\\PNG\\yellow_back.png") || selectedC.Image == Image.FromFile("..\\..\\..\\PNG\\Nword.jpg"))
             {
                 if(glowingC == null || glowingC.Tag == null)
                 {
@@ -268,27 +285,86 @@ namespace Solitare_WF
                     {
                         Controls.Remove(glowPB);
                         glowingC = null;
+                        Console.WriteLine($"You removed the glow from {(Card)selectedC.Tag}");
+                    }
+                    else if(((Card)glowingC.Tag).getNum() == 1 && selectedC.Image == Image.FromFile("..\\..\\..\\PNG\\Nword.jpg"))
+                    {
+                        Controls.Remove(glowPB);
+                        glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
+                        glowingC = null;
                     }
                     else if(deck.areDifferentcolors((Card)selectedC.Tag,(Card)glowingC.Tag) && deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag))
                     {
                         Controls.Remove(glowPB);
-                        glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
-                        for(int i = 0; i < 7; i++)
+                        if(dealer.Contains(glowingC) || true)
+                        {
+                            List<PictureBox> list = dealer.ToList();
+                            list.RemoveAll(x => x.Equals(glowingC));
+                            dealer = list.ToArray();
+                            openDealer = null;
+                        }
+                        bool MoreCards = false;
+                        int j, k = 0;
+                        PictureBox[] tempCs = new PictureBox[0];
+                        for (int i = 0; i < 7; i++)
                         {
                             if (lines[i].Contains(glowingC))
                             {
-                                lines[i].Remove(glowingC);
-                            }
-                            else if (lines[i].Contains(selectedC))
-                            {
-                                lines[i].Add(glowingC);
+                                for(j = 0; j < lines[i].Count; j++)
+                                {
+                                    if (lines[i][j] == glowingC)
+                                    {
+                                        tempCs = new PictureBox[lines[i].Count - j];
+                                        MoreCards = true;
+                                    }
+                                    if (MoreCards)
+                                    {
+                                        tempCs[k] = lines[i][j];
+                                        k++;
+                                    }
+                                } 
+                                for(int u = 0; u < k; u++)
+                                {
+                                    lines[i].Remove(tempCs[u]);
+                                    tempCs[u].Location = new Point(selectedC.Location.X, selectedC.Location.Y + k*20);
+                                }
                             }
                         }
+                        for (int i = 0; i < 7; i++)
+                        {
+                            if (lines[i].Contains(selectedC))
+                            {
+                                lines[i].Add(glowingC);
+                                for (k = k - 1; k >= 0; k--)
+                                {
+                                    lines[i].Add(tempCs[k]);
+                                }
+                            }
+                        }
+                        Console.WriteLine($"You moved {(Card)glowingC.Tag} and {k - 1} other Cards to under {(Card)selectedC.Tag}");
                         glowingC = null;
+                        k = 0;
                     }
                 }
             }
+            if (glowingC != null) { Console.WriteLine($"GlowingC is {(Card)glowingC.Tag}"); }
+        }
+        public void moveCardsToSlots(PictureBox c1, PictureBox slot)
+        {
             
+        }
+        public void aceClick(object sender, EventArgs e)
+        {
+            PictureBox selectedAce = (PictureBox)sender;
+        }
+        public void kingClick(object sender, EventArgs e)
+        {
+
+        }
+        public void moveAceToSlot(PictureBox Ace, PictureBox slot)
+        {
+            slot.Tag = (Card)Ace.Tag;
+
         }
         public void glowClick(object sender, EventArgs e)
         {
@@ -297,7 +373,14 @@ namespace Solitare_WF
             isSelected = false;
             glowingC = null;
         }
-        //public void pictureBox1_Click(object sender, EventArgs e) { }
-        //public void pictureBox7_Click(object sender, EventArgs e) { }
     }
 }
+//TODO:
+//can't move a card if there's already a card there.
+//move a couple of cards at the same time
+//move to the slots
+//add dealer counter
+//
+//Bugs:
+//When you press the deck, the card you pulled out of the deck disapears
+//newer bug: you can't even pull cards out of the deck

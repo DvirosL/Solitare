@@ -9,7 +9,7 @@ namespace Solitare_WF
     class Deck
     {
         private Card[] cards = new Card[52];
-
+        private string[] slots = new string[4];
         public Deck(Card[] cards)
         {
             this.cards = cards;
@@ -25,6 +25,7 @@ namespace Solitare_WF
                 if (i == 2) { t = "Heart"; }
                 if (i == 3) { t = "Diamond"; }
                 if (i == 4) { t = "Club"; }
+                slots[i - 1] = t;
                 for (int n = 1; n <= 13; n++)
                 {
                     Card card = new Card(n, t);
@@ -50,6 +51,10 @@ namespace Solitare_WF
         public Card getCard(int i)
         {
             return cards[i];
+        }
+        public string getSlot(int i)
+        {
+            return slots[i];
         }
         public bool areFollowingNum(Card c1, Card c2)
         //are the Cards one after the other
