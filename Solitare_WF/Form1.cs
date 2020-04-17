@@ -293,17 +293,27 @@ namespace Solitare_WF
                         glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
                         glowingC = null;
                     }
-                    else if(deck.areDifferentcolors((Card)selectedC.Tag,(Card)glowingC.Tag) && deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag))
+                    //deck.areDifferentcolors((Card)selectedC.Tag,(Card)glowingC.Tag) && 
+                    else if (deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag))
                     {
                         Controls.Remove(glowPB);
-                        if(dealer.Contains(glowingC) || true)
+                        if(dealer.Contains(glowingC))
                         {
-                            List<PictureBox> list = dealer.ToList();
-                            list.RemoveAll(x => x.Equals(glowingC));
-                            dealer = list.ToArray();
+                            for(int i = 0; i < dealer.Length; i++)
+                            {
+                                if(dealer[i] == glowingC)
+                                {
+                                    for(int p = i; p < dealer.Length - 1; p++)
+                                    {
+                                        dealer[p] = dealer[p + 1];
+                                    }
+                                    dealer[dealer.Length - 1] = null;
+                                    break;
+                                }
+                            }
                             openDealer = null;
+                            glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
                         }
-                        bool MoreCards = false;
                         int j, k = 0;
                         PictureBox[] tempCs = new PictureBox[0];
                         for (int i = 0; i < 7; i++)
@@ -315,18 +325,16 @@ namespace Solitare_WF
                                     if (lines[i][j] == glowingC)
                                     {
                                         tempCs = new PictureBox[lines[i].Count - j];
-                                        MoreCards = true;
-                                    }
-                                    if (MoreCards)
-                                    {
-                                        tempCs[k] = lines[i][j];
-                                        k++;
+                                        for(k = 0; k < tempCs.Length; k++)
+                                        {
+                                            tempCs[k] = lines[i][j+k];
+                                        }
                                     }
                                 } 
-                                for(int u = 0; u < k; u++)
+                                for(int u = 0; u < tempCs.Length; u++)
                                 {
+                                    tempCs[u].Location = new Point(selectedC.Location.X, selectedC.Location.Y + (u + 1) * 20);
                                     lines[i].Remove(tempCs[u]);
-                                    tempCs[u].Location = new Point(selectedC.Location.X, selectedC.Location.Y + k*20);
                                 }
                             }
                         }
@@ -334,14 +342,13 @@ namespace Solitare_WF
                         {
                             if (lines[i].Contains(selectedC))
                             {
-                                lines[i].Add(glowingC);
-                                for (k = k - 1; k >= 0; k--)
+                                for (int r = 0; r < tempCs.Length; r++)
                                 {
-                                    lines[i].Add(tempCs[k]);
+                                    lines[i].Add(tempCs[r]);
                                 }
                             }
                         }
-                        Console.WriteLine($"You moved {(Card)glowingC.Tag} and {k - 1} other Cards to under {(Card)selectedC.Tag}");
+                        Console.WriteLine($"You moved {(Card)glowingC.Tag} and {tempCs.Length - 1} other Cards to under {(Card)selectedC.Tag}");
                         glowingC = null;
                         k = 0;
                     }

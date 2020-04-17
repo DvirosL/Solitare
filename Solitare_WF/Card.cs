@@ -27,7 +27,7 @@ namespace Solitare_WF
         }
         public override string ToString()
         {
-            return $"{type} || {num}";
+            return $"|{type}||{num}|";
         }
     }
 }
