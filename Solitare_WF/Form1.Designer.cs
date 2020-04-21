@@ -1,4 +1,6 @@
-﻿namespace Solitare_WF
+﻿using System;
+
+namespace Solitare_WF
 {
     partial class Form1
     {
@@ -46,6 +48,11 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
