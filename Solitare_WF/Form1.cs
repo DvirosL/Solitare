@@ -21,7 +21,7 @@ namespace Solitare_WF
         private PictureBox[] cards = new PictureBox[52];
         private List<PictureBox> dealer = new List<PictureBox>();
         private List<PictureBox>[] lines = new List<PictureBox>[7];
-        private bool bruh_you_found_an_easter_egg;
+        private bool win;
         private PictureBox[] hidCards = new PictureBox[27];
         private Image hiddenCardImg = Image.FromFile("..\\..\\..\\PNG\\yellow_back.png");
         private Image glowImg = Image.FromFile("..\\..\\..\\PNG\\glow.png");
@@ -251,168 +251,172 @@ namespace Solitare_WF
                     }
                 }
             }
-            if (glowingC == null || glowingC.Tag == null)
+            if (selectedC.Image != Image.FromFile("..\\..\\..\\PNG\\yellow_back.png"))
             {
-                glowImg = Resize(glowImg, 95, 145);
-                glowPB.Location = new Point(selectedC.Location.X - 5, selectedC.Location.Y - 5);
-                glowPB.Image = glowImg;
-                glowPB.Size = glowImg.Size;
-                Controls.Add(glowPB);
-                glowingC = selectedC;
-            }//Apply glow
-            else
-            {
-                if (selectedC == glowingC)
+                if (glowingC == null || glowingC.Tag == null)
                 {
-                    Controls.Remove(glowPB);
-                    glowingC = null;
-                    Console.WriteLine($"You removed the glow from {(Card)selectedC.Tag}");
-                }//Remove glow on same card
-                else if (deck.areDifferentcolors((Card)selectedC.Tag, (Card)glowingC.Tag) && (deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag)) && !Replaceable)
+                    glowImg = Resize(glowImg, 95, 145);
+                    glowPB.Location = new Point(selectedC.Location.X - 5, selectedC.Location.Y - 5);
+                    glowPB.Image = glowImg;
+                    glowPB.Size = glowImg.Size;
+                    Controls.Add(glowPB);
+                    glowingC = selectedC;
+                }//Apply glow
+                else
                 {
-                    Controls.Remove(glowPB);
-                    for (int i = 0; i < dealer.Count; i++)
+                    if (selectedC == glowingC)
                     {
-                        if (((PictureBox)dealer[i].Tag).Equals(glowingC))
-                        {
-                            glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
-                            glowingC.BringToFront();
-                            Console.WriteLine($"You moved {(Card)glowingC.Tag} from the dealer to under {(Card)selectedC.Tag}");
-                            openCard = null; 
-                            isCardFromDealer = true;
-                            for (int j = 0; j < 7; j++)
-                            {
-                                if (lines[j].Contains(selectedC))
-                                {
-                                    lines[j].Add((PictureBox)dealer[i].Tag);
-                                }
-                            }
-                            Controls.Remove(dealer[i]);
-                            dealer.Remove(dealer[i]);
-                            glowingC = null;
-                            break;
-                        }
-                    }//Move Card from dealer
-                    if (!isCardFromDealer)
+                        Controls.Remove(glowPB);
+                        glowingC = null;
+                        Console.WriteLine($"You removed the glow from {(Card)selectedC.Tag}");
+                    }//Remove glow on same card
+                    //deck.areDifferentcolors((Card)selectedC.Tag, (Card)glowingC.Tag) && 
+                    else if ((deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag)) && !Replaceable)
                     {
-                        int j, k = 0;
-                        PictureBox[] tempCs = new PictureBox[0];
-                        for (int i = 0; i < 7; i++)
+                        Controls.Remove(glowPB);
+                        for (int i = 0; i < dealer.Count; i++)
                         {
-                            if (lines[i].Contains(glowingC))
+                            if (((PictureBox)dealer[i].Tag).Equals(glowingC))
                             {
-                                for (j = 0; j < lines[i].Count; j++)
+                                glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
+                                glowingC.BringToFront();
+                                Console.WriteLine($"You moved {(Card)glowingC.Tag} from the dealer to under {(Card)selectedC.Tag}");
+                                openCard = null; 
+                                isCardFromDealer = true;
+                                for (int j = 0; j < 7; j++)
                                 {
-                                    if (lines[i][j] == glowingC)
+                                    if (lines[j].Contains(selectedC))
                                     {
-                                        tempCs = new PictureBox[lines[i].Count - j];
-                                        for (k = 0; k < tempCs.Length; k++)
+                                        lines[j].Add((PictureBox)dealer[i].Tag);
+                                    }
+                                }
+                                Controls.Remove(dealer[i]);
+                                dealer.Remove(dealer[i]);
+                                glowingC = null;
+                                break;
+                            }
+                        }//Move Card from dealer
+                        if (!isCardFromDealer)
+                        {
+                            int j, k = 0;
+                            PictureBox[] tempCs = new PictureBox[0];
+                            for (int i = 0; i < 7; i++)
+                            {
+                                if (lines[i].Contains(glowingC))
+                                {
+                                    for (j = 0; j < lines[i].Count; j++)
+                                    {
+                                        if (lines[i][j] == glowingC)
                                         {
-                                            tempCs[k] = lines[i][j + k];
+                                            tempCs = new PictureBox[lines[i].Count - j];
+                                            for (k = 0; k < tempCs.Length; k++)
+                                            {
+                                                tempCs[k] = lines[i][j + k];
+                                            }
                                         }
                                     }
-                                }
-                                for (int u = 0; u < tempCs.Length; u++)
-                                {
-                                    tempCs[u].Location = new Point(selectedC.Location.X, selectedC.Location.Y + (u + 1) * 20);
-                                    tempCs[u].BringToFront();
-                                    lines[i].Remove(tempCs[u]);
-                                }
-                                if (lines[i].Count != 0)
-                                {
-                                    try
+                                    for (int u = 0; u < tempCs.Length; u++)
                                     {
-                                        lines[i][lines[i].Count - 1].Image = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Image;
-                                        lines[i][lines[i].Count - 1].Click += cardClick;
-                                        lines[i][lines[i].Count - 1].Tag = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Tag;
+                                        tempCs[u].Location = new Point(selectedC.Location.X, selectedC.Location.Y + (u + 1) * 20);
+                                        tempCs[u].BringToFront();
+                                        lines[i].Remove(tempCs[u]);
                                     }
-                                    catch { }
+                                    if (lines[i].Count != 0)
+                                    {
+                                        try
+                                        {
+                                            lines[i][lines[i].Count - 1].Image = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Image;
+                                            lines[i][lines[i].Count - 1].Click += cardClick;
+                                            lines[i][lines[i].Count - 1].Tag = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Tag;
+                                        }
+                                        catch { }
+                                    }
                                 }
                             }
-                        }
-                        for (int i = 0; i < 7; i++)
-                        {
-                            if (lines[i].Contains(selectedC))
+                            for (int i = 0; i < 7; i++)
                             {
-                                for (int r = 0; r < tempCs.Length; r++)
+                                if (lines[i].Contains(selectedC))
                                 {
-                                    lines[i].Add(tempCs[r]);
+                                    for (int r = 0; r < tempCs.Length; r++)
+                                    {
+                                        lines[i].Add(tempCs[r]);
+                                    }
                                 }
                             }
-                        }
-                        k = 0;
-                        Console.WriteLine($"You moved {(Card)glowingC.Tag} and {tempCs.Length - 1} other Cards to under {(Card)selectedC.Tag}");
-                        glowingC = null;
-                    } //Move Cards from line to line
-                    movesCounter++;
-                }
-                else if (((Card)selectedC.Tag).getNum() == ((Card)glowingC.Tag).getNum() - 1 && (((Card)selectedC.Tag).getType() == ((Card)glowingC.Tag).getType()) && (selectedC.Equals(slotSpb) || selectedC.Equals(slotHpb) || selectedC.Equals(slotDpb) || selectedC.Equals(slotCpb)))
-                {
-                    Controls.Remove(glowPB);
-                    for (int i = 0; i < dealer.Count; i++)
+                            k = 0;
+                            Console.WriteLine($"You moved {(Card)glowingC.Tag} and {tempCs.Length - 1} other Cards to under {(Card)selectedC.Tag}");
+                            glowingC = null;
+                        } //Move Cards from line to line
+                        movesCounter++;
+                    }
+                    else if (((Card)selectedC.Tag).getNum() == ((Card)glowingC.Tag).getNum() - 1 && (((Card)selectedC.Tag).getType() == ((Card)glowingC.Tag).getType()) && (selectedC.Equals(slotSpb) || selectedC.Equals(slotHpb) || selectedC.Equals(slotDpb) || selectedC.Equals(slotCpb)))
                     {
-                        if (((PictureBox)dealer[i].Tag).Equals(glowingC))
+                        Controls.Remove(glowPB);
+                        for (int i = 0; i < dealer.Count; i++)
+                        {
+                            if (((PictureBox)dealer[i].Tag).Equals(glowingC))
+                            {
+                                glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y);
+                                glowingC.BringToFront();
+                                Controls.Remove(dealer[i]);
+                                dealer.Remove(dealer[i]);
+                                openCard = null;
+                                Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {((Card)selectedC.Tag).getType()}");
+                                isCardFromDealer = true;
+                                break;
+                            }
+                        }//Move from dealer to slot
+                        if (!isCardFromDealer)
                         {
                             glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y);
                             glowingC.BringToFront();
-                            Controls.Remove(dealer[i]);
-                            dealer.Remove(dealer[i]);
-                            openCard = null;
-                            Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {((Card)selectedC.Tag).getType()}");
-                            isCardFromDealer = true;
-                            break;
-                        }
-                    }//Move from dealer to slot
-                    if (!isCardFromDealer)
-                    {
-                        glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y);
-                        glowingC.BringToFront();
-                        for (int i = 0; i < 7; i++)
-                        {
-                            if (lines[i].Contains(glowingC))
+                            for (int i = 0; i < 7; i++)
                             {
-                                for (int r = 0; r < lines[i].Count; r++)
+                                if (lines[i].Contains(glowingC))
                                 {
-                                    lines[i].Remove(glowingC);
-                                }
-                                if (lines[i].Count != 0)
-                                {
-                                    try
+                                    for (int r = 0; r < lines[i].Count; r++)
                                     {
-                                        lines[i][lines[i].Count - 1].Image = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Image;
-                                        lines[i][lines[i].Count - 1].Click += cardClick;
-                                        lines[i][lines[i].Count - 1].Tag = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Tag;
+                                        lines[i].Remove(glowingC);
                                     }
-                                    catch { }
+                                    if (lines[i].Count != 0)
+                                    {
+                                        try
+                                        {
+                                            lines[i][lines[i].Count - 1].Image = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Image;
+                                            lines[i][lines[i].Count - 1].Click += cardClick;
+                                            lines[i][lines[i].Count - 1].Tag = ((PictureBox)lines[i][lines[i].Count - 1].Tag).Tag;
+                                        }
+                                        catch { }
+                                    }
                                 }
                             }
-                        }
-                        Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {((Card)selectedC.Tag).getType()}");
-                    }//Move from lines to slot
-                    {
-                        if (((Card)selectedC.Tag).getType() == "Spade")
+                            Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {((Card)selectedC.Tag).getType()}");
+                        }//Move from lines to slot
                         {
-                            slotSCount++;
-                            slotSpb = glowingC;
+                            if (((Card)selectedC.Tag).getType() == "Spade")
+                            {
+                                slotSCount++;
+                                slotSpb = glowingC;
+                            }
+                            else if (((Card)selectedC.Tag).getType() == "Heart")
+                            {
+                                slotHCount++;
+                                slotHpb = glowingC;
+                            }
+                            else if (((Card)selectedC.Tag).getType() == "Diamond")
+                            {
+                                slotDCount++;
+                                slotDpb = glowingC;
+                            }
+                            else if (((Card)selectedC.Tag).getType() == "Club")
+                            {
+                                slotCCount++;
+                                slotCpb = glowingC;
+                            }
                         }
-                        else if (((Card)selectedC.Tag).getType() == "Heart")
-                        {
-                            slotHCount++;
-                            slotHpb = glowingC;
-                        }
-                        else if (((Card)selectedC.Tag).getType() == "Diamond")
-                        {
-                            slotDCount++;
-                            slotDpb = glowingC;
-                        }
-                        else if (((Card)selectedC.Tag).getType() == "Club")
-                        {
-                            slotCCount++;
-                            slotCpb = glowingC;
-                        }
+                        glowingC = null;
+                        movesCounter++;
                     }
-                    glowingC = null;
-                    movesCounter++;
                 }
             }
             if (glowingC != null) { Console.WriteLine($"GlowingC is {(Card)glowingC.Tag}"); }
@@ -634,7 +638,7 @@ namespace Solitare_WF
         }
         public void checkWin()
         {
-            if(slotSCount == 13 && slotHCount == 13 && slotDCount == 13 && slotCCount == 13)
+            //if(slotSCount == 13 && slotHCount == 13 && slotDCount == 13 && slotCCount == 13)
             {
                 elapsedTime = String.Format("{0:00}:{1:00}", playTime.Elapsed.Minutes, playTime.Elapsed.Seconds);
                 MessageBox.Show($"You've won the game!\nYour time was {elapsedTime}\nYou played {movesCounter} moves ", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -651,3 +655,23 @@ namespace Solitare_WF
         }
     }
 }
+//TODO:
+//
+//Bugs:
+//last dealer card fucking up the dealer
+//
+//Done:
+//move a couple of cards at the same time
+//Add dealer counter
+//can't move a card if there's already a card there.
+//reveal 
+//Only ace can go in the slots
+//king to empty
+//win condition
+//
+//Bugs fixed:
+//Cards that move from the dealer to the slots (and to cards in the slots) are returning when their dealer spot is reopened
+//dealer doesnt add lines (only in the ui)
+
+
+     
