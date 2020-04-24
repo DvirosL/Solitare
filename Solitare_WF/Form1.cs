@@ -34,10 +34,7 @@ namespace Solitare_WF
             InitializeComponent();
             buildSlotim();
             buildDeck();
-            //if (win)
-            //{
-            //    win();
-            //}
+
         }
         public void buildDeck()
         {
@@ -264,20 +261,20 @@ namespace Solitare_WF
                         {
                             if (((PictureBox)dealer[i].Tag).Equals(glowingC))
                             {
-                                dealer.Remove(dealer[i]);
                                 glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y + 20);
                                 glowingC.BringToFront();
                                 Console.WriteLine($"You moved {(Card)glowingC.Tag} from the dealer to under {(Card)selectedC.Tag}");
-                                Controls.Remove(dealer[i]);
-                                openCard = null;
+                                openCard = null; 
                                 isCardFromDealer = true;
-                                for (int j = 0; i < 7; i++)
+                                for (int j = 0; j < 7; j++)
                                 {
-                                    if (lines[i].Contains(selectedC))
+                                    if (lines[j].Contains(selectedC))
                                     {
-                                        lines[i].Add(glowingC);
+                                        lines[j].Add((PictureBox)dealer[i].Tag);
                                     }
                                 }
+                                Controls.Remove(dealer[i]);
+                                dealer.Remove(dealer[i]);
                                 glowingC = null;
                                 break;
                             }
@@ -341,9 +338,11 @@ namespace Solitare_WF
                         {
                             if (((PictureBox)dealer[i].Tag).Equals(glowingC))
                             {
+                                dealer.Remove(dealer[i]);
                                 glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y);
                                 glowingC.BringToFront();
-                                dealer.Remove(glowingC);
+                                Controls.Remove(dealer[i]);
+                                openCard = null;
                                 Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {((Card)selectedC.Tag).getType()}");
                                 isCardFromDealer = true;
                                 break;
@@ -402,6 +401,7 @@ namespace Solitare_WF
                 }
             }
             if (glowingC != null) { Console.WriteLine($"GlowingC is {(Card)glowingC.Tag}"); }
+            checkWin();
         }
         public void slotClick(object sender, EventArgs e)
         {
@@ -413,12 +413,14 @@ namespace Solitare_WF
                 {
                     if (((PictureBox)dealer[i].Tag).Equals(glowingC))
                     {
+                        dealer.Remove(dealer[i]);
                         glowingC.Location = new Point(selectedSlot.Location.X, selectedSlot.Location.Y);
                         glowingC.BringToFront();
-                        dealer.Remove(glowingC);
+                        Controls.Remove(dealer[i]);
                         Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {selectedSlot.Tag}");
                         isCardFromDealer = true;
                         Controls.Remove(glowPB);
+                        openCard = null;
                         break;
                     }
                 }//Move from dealer to slot
@@ -469,7 +471,7 @@ namespace Solitare_WF
         private void dealerClick(object sender, EventArgs e)
         {
             //Counter
-            if (dealer.Count == int.Parse(dealerCounterLabel.Text))
+            if (dealer.Count <= int.Parse(dealerCounterLabel.Text))
             {
                 dealerCounterLabel.Text = "1";
             }
@@ -595,9 +597,13 @@ namespace Solitare_WF
                 glowingC = null;
             }
         }
-        private void Form1_Load(object sender, EventArgs e)
+        public void checkWin()
         {
-
+            if(slotSCount == 13 && slotHCount == 13 && slotDCount == 13 && slotCCount == 13)
+            {
+                MessageBox.Show("You've won the game!", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(Environment.ExitCode);
+            }
         }
         public Image Resize(Image image, int w, int h)
         {
@@ -617,18 +623,18 @@ namespace Solitare_WF
     }
 }
 //TODO:
-//move to the slots
 //win condition
 //
 //Bugs:
-//Cards that move from the dealer to the slots (and to cards in the slots) are returning when their dealer spot is reopened
+//dealer doesnt add lines (only in the ui)
 //
 //Done:
 //move a couple of cards at the same time
 //Add dealer counter
 //can't move a card if there's already a card there.
-//reveal cards
-//Bugs fixed
+//reveal 
 //Only ace can go in the slots
 //king to empty
-
+//
+//Bugs fixed:
+//Cards that move from the dealer to the slots (and to cards in the slots) are returning when their dealer spot is reopened

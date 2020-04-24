@@ -43,16 +43,16 @@ namespace Solitare_WF
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Name = "Solitare";
+            this.Text = "Solitare";
+            //this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
         #endregion
