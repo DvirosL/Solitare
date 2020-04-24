@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -29,23 +32,31 @@ namespace Solitare_WF
         private PictureBox[] emptyCards = new PictureBox[7];
         private int slotSCount, slotHCount, slotDCount, slotCCount;
         private PictureBox slotSpb, slotHpb, slotDpb, slotCpb;
+        private static Stopwatch playTime = new Stopwatch();
+        private int movesCounter = 0;
+        private Label movesCounterL = new Label();
+        private string elapsedTime;
+        private Random rnd = new Random();
         public Form1()
         {
             InitializeComponent();
             buildSlotim();
             buildDeck();
-
         }
         public void buildDeck()
         {
-            Random rnd = new Random();
             {
-                dealerCounterLabel.Location = new Point(630, 35);
+                dealerCounterLabel.Location = new Point(630, 30);
                 dealerCounterLabel.Width = 25;
                 dealerCounterLabel.Height = 15;
                 dealerCounterLabel.Text = "0";
                 Controls.Add(dealerCounterLabel);
-            } //Add dealer Counter
+                movesCounterL.Location = new Point(715, 75);
+                movesCounterL.Width = 30;
+                movesCounterL.Height = 20;
+                movesCounterL.Text = $"{movesCounter}";
+                Controls.Add(movesCounterL);
+            } //Add Counters
             for (int i = 0; i < 7; i++)
             {
                 emptyCards[i] = new PictureBox();
@@ -198,7 +209,7 @@ namespace Solitare_WF
                     lines[i][j].BringToFront();
                 }
             } //add the lines to the form
-        }
+    }
         public void buildSlotim()
         {
             for (int i = 0; i < 4; i++)
@@ -216,6 +227,12 @@ namespace Solitare_WF
         }
         public void cardClick(object sender, EventArgs e)
         {
+            bool isfirstT = true;
+            if (isfirstT)
+            {
+                isfirstT = false;
+                playTime.Start();
+            }
             PictureBox selectedC = (PictureBox)sender;
             Console.WriteLine($"You clicked {(Card)selectedC.Tag}");
             bool isCardFromDealer = false;
@@ -253,7 +270,7 @@ namespace Solitare_WF
                         glowingC = null;
                         Console.WriteLine($"You removed the glow from {(Card)selectedC.Tag}");
                     }//Remove glow on same card
-                    //deck.areDifferentcolors((Card)selectedC.Tag, (Card)glowingC.Tag) &&  
+                    //deck.areDifferentcolors((Card)selectedC.Tag, (Card)glowingC.Tag) && 
                     else if ((deck.areFollowingNum((Card)glowingC.Tag, (Card)selectedC.Tag)) && !Replaceable)
                     {
                         Controls.Remove(glowPB);
@@ -330,6 +347,7 @@ namespace Solitare_WF
                             Console.WriteLine($"You moved {(Card)glowingC.Tag} and {tempCs.Length - 1} other Cards to under {(Card)selectedC.Tag}");
                             glowingC = null;
                         } //Move Cards from line to line
+                        movesCounter++;
                     }
                     else if (((Card)selectedC.Tag).getNum() == ((Card)glowingC.Tag).getNum() - 1 && (((Card)selectedC.Tag).getType() == ((Card)glowingC.Tag).getType()) && (selectedC.Equals(slotSpb) || selectedC.Equals(slotHpb) || selectedC.Equals(slotDpb) || selectedC.Equals(slotCpb)))
                     {
@@ -338,10 +356,10 @@ namespace Solitare_WF
                         {
                             if (((PictureBox)dealer[i].Tag).Equals(glowingC))
                             {
-                                dealer.Remove(dealer[i]);
                                 glowingC.Location = new Point(selectedC.Location.X, selectedC.Location.Y);
                                 glowingC.BringToFront();
                                 Controls.Remove(dealer[i]);
+                                dealer.Remove(dealer[i]);
                                 openCard = null;
                                 Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {((Card)selectedC.Tag).getType()}");
                                 isCardFromDealer = true;
@@ -397,11 +415,16 @@ namespace Solitare_WF
                             }
                         }
                         glowingC = null;
+                        movesCounter++;
                     }
                 }
             }
             if (glowingC != null) { Console.WriteLine($"GlowingC is {(Card)glowingC.Tag}"); }
             checkWin();
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            movesCounterL.Text = $"{movesCounter}";
         }
         public void slotClick(object sender, EventArgs e)
         {
@@ -413,10 +436,10 @@ namespace Solitare_WF
                 {
                     if (((PictureBox)dealer[i].Tag).Equals(glowingC))
                     {
+                        Controls.Remove(dealer[i]);
                         dealer.Remove(dealer[i]);
                         glowingC.Location = new Point(selectedSlot.Location.X, selectedSlot.Location.Y);
                         glowingC.BringToFront();
-                        Controls.Remove(dealer[i]);
                         Console.WriteLine($"You moved {(Card)glowingC.Tag} to slot {selectedSlot.Tag}");
                         isCardFromDealer = true;
                         Controls.Remove(glowPB);
@@ -466,6 +489,7 @@ namespace Solitare_WF
                     slotCpb = glowingC;
                 }
                 glowingC = null;
+                movesCounter++;
             }
         }
         private void dealerClick(object sender, EventArgs e)
@@ -498,11 +522,25 @@ namespace Solitare_WF
                         }
                     }
                 }
-            }
+            } 
             else
             {
-                Controls.Add(dealer[dealer.Count - 1]);
-                Controls.Remove((PictureBox)dealer[dealer.Count - 1].Tag);
+                if (dealer.Count == 1)
+                {
+                    Controls.Add(dealer[0]);
+                    //Controls.Remove((PictureBox)dealer[dealer.Count - 1].Tag);
+                    Label emptyDealerLabel = new Label();
+                    emptyDealerLabel.Location = new Point(480, 75);
+                    emptyDealerLabel.Height = 50;
+                    emptyDealerLabel.Width = 120;
+                    emptyDealerLabel.Text = "All of the cards \n are out of the \n dealer!";
+                    Controls.Add(emptyDealerLabel);
+                }
+                else
+                {
+                    Controls.Add(dealer[dealer.Count - 1]);
+                    Controls.Remove((PictureBox)dealer[dealer.Count - 1].Tag);
+                }
             }
             //Remove Glow
             foreach (Control shem in Controls)
@@ -595,13 +633,15 @@ namespace Solitare_WF
                     }
                 }
                 glowingC = null;
+                movesCounter++;
             }
         }
         public void checkWin()
         {
-            if(slotSCount == 13 && slotHCount == 13 && slotDCount == 13 && slotCCount == 13)
+            //if(slotSCount == 13 && slotHCount == 13 && slotDCount == 13 && slotCCount == 13)
             {
-                MessageBox.Show("You've won the game!", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                elapsedTime = String.Format("{0:00}:{1:00}", playTime.Elapsed.Minutes, playTime.Elapsed.Seconds);
+                MessageBox.Show($"You've won the game!\nYour time was {elapsedTime}\nYou played {movesCounter} moves ", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(Environment.ExitCode);
             }
         }
@@ -613,20 +653,12 @@ namespace Solitare_WF
             grp.Dispose();
             return bmp;
         }
-
-        //public void glowClick(object sender, EventArgs e)
-        //{
-        //    PictureBox glowPB = (PictureBox)sender;
-        //    Controls.Remove(glowPB);
-        //    glowingC = null;
-        //}
     }
 }
 //TODO:
-//win condition
 //
 //Bugs:
-//dealer doesnt add lines (only in the ui)
+//last dealer card fucking up the dealer
 //
 //Done:
 //move a couple of cards at the same time
@@ -635,6 +667,11 @@ namespace Solitare_WF
 //reveal 
 //Only ace can go in the slots
 //king to empty
+//win condition
 //
 //Bugs fixed:
 //Cards that move from the dealer to the slots (and to cards in the slots) are returning when their dealer spot is reopened
+//dealer doesnt add lines (only in the ui)
+
+
+     
